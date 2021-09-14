@@ -3,7 +3,7 @@ const {Client, Pool} = require("pg");
 const config = {
     user: "postgres",
     host: "localhost",
-    database: "blog",
+    database: "blogs",
     password: "jesus4ever",
     port: 5432,
     max: 20,
@@ -49,7 +49,9 @@ pool.connect(async (error_conexion, client, release) => {
 });
 
 */
-
+ 
+// 3era Forma
+/*
 pool.connect(async (error_conexion, client, release) => {
 
     const SQLQuery = {
@@ -64,6 +66,23 @@ pool.connect(async (error_conexion, client, release) => {
     pool.end();
 });
 
+*/
+
+
+// Para mostrar en forma de Array 
+pool.connect(async (error_conexion, client, release) => {
+    const SQLQuery = {
+        rowMode: 'array',
+        text: "select * from ropa",
+    };
+    if (error_conexion) return console.error(error_conexion.code);
+
+    const res = await client.query(SQLQuery);
+    release();
+
+    console.log(res.rows);
+    pool.end();
+});
 
 const ingresar = async() => {
     
