@@ -17,6 +17,22 @@ const config = {
 
 const pool = new Pool(config);
 
+// 1era Forma
+/*
+pool.connect((error_conexion, client, release) => {
+
+    client.query(`insert into ropa (nombre, color, talla) values
+('botas', 'rosa', '4000') RETURNING *;`, (error_query, resul) => {
+
+        release();
+
+        console.log("Ultimo registro agregado: ", resul.rows[0]);
+    });
+
+    pool.end();
+});*/
+// 2da Forma
+/*
 pool.connect(async (error_conexion, client, release) => {
 
     const res = await client.query(
@@ -31,23 +47,23 @@ pool.connect(async (error_conexion, client, release) => {
 
     pool.end();
 });
-    
 
+*/
 
+pool.connect(async (error_conexion, client, release) => {
 
-/*
-pool.connect((error_conexion, client, release) => {
+    const SQLQuery = {
+        text: `insert into ropa (nombre, color, talla) values ($1, $2, $3)
+    RETURNING *;`,
+        values: ["cinturon", "gris", "98"],
+    };
 
-    client.query(`insert into ropa (nombre, color, talla) values
-('botas', 'rosa', '4000') RETURNING *;`, (error_query, resul) => {
-
-        release();
-
-        console.log("Ultimo registro agregado: ", resul.rows[0]);
-    });
-
+    const res = await client.query(SQLQuery);
+    release();
+    console.log(res.rows[0]);
     pool.end();
-});*/
+});
+
 
 const ingresar = async() => {
     
