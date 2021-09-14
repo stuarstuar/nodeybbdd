@@ -17,6 +17,25 @@ const config = {
 
 const pool = new Pool(config);
 
+pool.connect(async (error_conexion, client, release) => {
+
+    const res = await client.query(
+        `insert into ropa (nombre, color, talla) values ($1, $2, $3)
+    RETURNING *;`,
+        ["calcetines", "verde", "M"]
+    );
+
+    release();
+
+    console.log(res.rows[0]);
+
+    pool.end();
+});
+    
+
+
+
+/*
 pool.connect((error_conexion, client, release) => {
 
     client.query(`insert into ropa (nombre, color, talla) values
@@ -28,7 +47,7 @@ pool.connect((error_conexion, client, release) => {
     });
 
     pool.end();
-});
+});*/
 
 const ingresar = async() => {
     
